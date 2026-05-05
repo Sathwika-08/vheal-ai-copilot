@@ -1,0 +1,121 @@
+patient_id,name,age,diagnosis,severity,room,doctor,phone,status
+PT001,John Smith,72,CHF,90,302A,Dr.S.Johnson,+919999999999,READY
+PT002,Jane Doe,54,Pneumonia,60,210B,Dr.A.Patel,+919812345678,WAITING
+PT003,Sam Green,65,Diabetes,45,109C,Dr.R.Kumar,+917569653788,READY
+PT004,Anita Sharma,68,Hypertension,75,401A,Dr.S.Johnson,+919876543210,WAITING
+PT005,Ravi Verma,80,Cardiac Arrest,95,ICU-1,Dr.A.Patel,+919123456789,CRITICAL
+PT006,Meena Iyer,47,Appendicitis,55,205C,Dr.R.Kumar,+917890123456,READY
+PT007,David Wilson,61,Kidney Failure,85,308B,Dr.S.Johnson,+919988776655,WAITING
+PT008,Sunita Rao,39,Fracture,30,112A,Dr.A.Patel,+916281039410,READY
+PT009,Mohammed Ali,73,Stroke,88,ICU-2,Dr.R.Kumar,+917654321098,CRITICAL
+PT010,Priya Nair,52,Asthma,50,220B,Dr.S.Johnson,+916543210987,WAITING
+PT011,Karan Mehta,45,Dengue Fever,65,317C,Dr.A.Patel,+915432109876,READY
+PT012,Lakshmi Devi,77,Liver Cirrhosis,82,404A,Dr.R.Kumar,+914321098765,WAITING
+PT013,Arjun Reddy,34,Malaria,40,115B,Dr.S.Johnson,+913210987654,READY
+PT014,Fatima Begum,60,COPD,78,222A,Dr.A.Patel,+912109876543,WAITING
+PT015,Suresh Babu,71,Coronary Artery Disease,87,ICU-3,Dr.R.Kumar,+911098765432,CRITICAL
+PT016,Rekha Gupta,49,Thyroid Disorder,48,118C,Dr.S.Johnson,+910987654321,READY
+PT017,Vikram Singh,83,Dementia,80,405B,Dr.A.Patel,+919871234567,WAITING
+PT018,Deepa Pillai,38,Appendicitis,35,113A,Dr.R.Kumar,+919761234567,READY
+PT019,Harish Nair,67,Diabetes,70,312C,Dr.S.Johnson,+919651234567,WAITING
+PT020,Kavitha Reddy,55,Breast Cancer,83,ICU-4,Dr.A.Patel,+919541234567,CRITICAL
+PT021,Raj Patel,42,Typhoid,42,116B,Dr.R.Kumar,+919431234567,READY
+PT022,Sudha Murthy,74,Osteoporosis,72,406A,Dr.S.Johnson,+919321234567,WAITING
+PT023,Arun Kumar,58,Liver Disease,76,315B,Dr.A.Patel,+919211234567,WAITING
+PT024,Geetha Nair,46,Migraine,32,119C,Dr.R.Kumar,+919101234567,READY
+PT025,Naresh Yadav,79,Cardiac Failure,92,ICU-5,Dr.S.Johnson,+918991234567,CRITICAL
+PT026,Pooja Sharma,31,Appendicitis,38,114A,Dr.A.Patel,+918881234567,READY
+PT027,Sanjay Gupta,63,Hypertension,68,318C,Dr.R.Kumar,+918771234567,WAITING
+PT028,Uma Devi,70,Arthritis,65,407B,Dr.S.Johnson,+918661234567,WAITING
+PT029,Rohit Verma,29,Fracture,28,110B,Dr.A.Patel,+918551234567,READY
+PT030,Lalitha Rao,56,Kidney Stones,58,223A,Dr.R.Kumar,+918441234567,WAITING
+PT031,Manoj Kumar,48,Dengue Fever,62,319C,Dr.S.Johnson,+918331234567,WAITING
+PT032,Saritha Nair,37,Appendicitis,33,117A,Dr.A.Patel,+918221234567,READY
+PT033,Vijay Sharma,75,Stroke,89,ICU-6,Dr.R.Kumar,+918111234567,CRITICAL
+PT034,Radha Krishna,62,COPD,74,320B,Dr.S.Johnson,+918001234567,WAITING
+PT035,Sunil Mehta,44,Malaria,44,120C,Dr.A.Patel,+917991234567,READY
+PT036,Padma Laxmi,69,Osteoporosis,67,408A,Dr.R.Kumar,+917881234567,WAITING
+PT037,Ganesh Babu,53,Liver Disease,71,321A,Dr.S.Johnson,+917771234567,WAITING
+PT038,Shanthi Devi,41,Thyroid Disorder,36,121B,Dr.A.Patel,+917661234567,READY
+PT039,Prakash Rao,78,Dementia,84,ICU-7,Dr.R.Kumar,+917551234567,CRITICAL
+PT040,Ananya Sharma,27,Fracture,25,111A,Dr.S.Johnson,+917441234567,READY
+PT041,Balasubramaniam,66,Coronary Artery Disease,81,ICU-8,Dr.A.Patel,+917331234567,CRITICAL
+PT042,Chitra Nair,50,Asthma,52,224B,Dr.R.Kumar,+917221234567,WAITING
+PT043,Dinesh Kumar,35,Typhoid,39,122C,Dr.S.Johnson,+917111234567,READY
+PT044,Eswari Devi,72,Hypertension,77,409A,Dr.A.Patel,+917001234567,WAITING
+PT045,Farooq Ahmed,59,Kidney Failure,86,ICU-9,Dr.R.Kumar,+916991234567,CRITICAL
+PT046,Girija Rao,43,Migraine,34,123A,Dr.S.Johnson,+916881234567,READY
+PT047,Hari Prasad,76,Liver Cirrhosis,85,ICU-10,Dr.A.Patel,+916771234567,CRITICAL
+PT048,Indira Gandhi,55,Breast Cancer,79,410B,Dr.R.Kumar,+916661234567,WAITING
+PT049,Jagadish Reddy,40,Dengue Fever,55,225C,Dr.S.Johnson,+916551234567,WAITING
+PT050,Kamala Devi,68,Arthritis,63,322A,Dr.A.Patel,+916441234567,WAITING
+PT051,Lokesh Sharma,33,Fracture,27,124B,Dr.R.Kumar,+916331234567,READY
+PT052,Manjula Rao,61,Diabetes,69,323C,Dr.S.Johnson,+916221234567,WAITING
+PT053,Naveen Kumar,47,Malaria,46,226A,Dr.A.Patel,+916111234567,READY
+PT054,Omkar Singh,74,Cardiac Arrest,93,ICU-11,Dr.R.Kumar,+916001234567,CRITICAL
+PT055,Parvathi Nair,36,Appendicitis,31,125C,Dr.S.Johnson,+915991234567,READY
+PT056,Qasim Khan,82,Stroke,91,ICU-12,Dr.A.Patel,+915881234567,CRITICAL
+PT057,Ramya Krishnan,29,Thyroid Disorder,29,126A,Dr.R.Kumar,+915771234567,READY
+PT058,Sridhar Rao,64,COPD,73,324B,Dr.S.Johnson,+915661234567,WAITING
+PT059,Tara Devi,71,Osteoporosis,66,411A,Dr.A.Patel,+915551234567,WAITING
+PT060,Umesh Gupta,45,Kidney Stones,53,227C,Dr.R.Kumar,+915441234567,WAITING
+PT061,Vasantha Kumari,57,Liver Disease,75,325A,Dr.S.Johnson,+915331234567,WAITING
+PT062,Wasim Akram,38,Dengue Fever,41,127B,Dr.A.Patel,+915221234567,READY
+PT063,Xavier Pinto,66,Hypertension,72,412B,Dr.R.Kumar,+915111234567,WAITING
+PT064,Yamini Reddy,43,Migraine,37,128C,Dr.S.Johnson,+915001234567,READY
+PT065,Zubair Khan,79,Cardiac Failure,90,ICU-13,Dr.A.Patel,+914991234567,CRITICAL
+PT066,Abhinav Sharma,32,Fracture,26,129A,Dr.R.Kumar,+914881234567,READY
+PT067,Bhavani Devi,60,Arthritis,64,326C,Dr.S.Johnson,+914771234567,WAITING
+PT068,Chandrakala,53,Asthma,54,228A,Dr.A.Patel,+914661234567,WAITING
+PT069,Dhanraj Singh,76,Dementia,83,ICU-14,Dr.R.Kumar,+914551234567,CRITICAL
+PT070,Elamaran Raj,41,Typhoid,43,130B,Dr.S.Johnson,+914441234567,READY
+PT071,Fathima Noor,67,Kidney Failure,84,ICU-15,Dr.A.Patel,+914331234567,CRITICAL
+PT072,Govind Rao,49,Liver Disease,57,229C,Dr.R.Kumar,+914221234567,WAITING
+PT073,Hemavathi,35,Appendicitis,32,131A,Dr.S.Johnson,+914111234567,READY
+PT074,Irfan Pasha,72,Coronary Artery Disease,88,ICU-16,Dr.A.Patel,+914001234567,CRITICAL
+PT075,Janaki Ammal,58,Osteoporosis,61,327A,Dr.R.Kumar,+913991234567,WAITING
+PT076,Karthik Raja,27,Malaria,38,132C,Dr.S.Johnson,+913881234567,READY
+PT077,Leela Krishnan,74,Stroke,87,ICU-17,Dr.A.Patel,+913771234567,CRITICAL
+PT078,Murugan Pillai,46,Diabetes,49,230B,Dr.R.Kumar,+913661234567,WAITING
+PT079,Nalini Sharma,62,COPD,71,328C,Dr.S.Johnson,+913551234567,WAITING
+PT080,Omar Farooq,55,Hypertension,66,413A,Dr.A.Patel,+913441234567,WAITING
+PT081,Padmavathi,39,Fracture,29,133B,Dr.R.Kumar,+913331234567,READY
+PT082,Raghavan Nair,80,Cardiac Arrest,94,ICU-18,Dr.S.Johnson,+913221234567,CRITICAL
+PT083,Savitri Devi,51,Thyroid Disorder,47,231A,Dr.A.Patel,+913111234567,READY
+PT084,Thangavel Raja,69,Liver Cirrhosis,80,414B,Dr.R.Kumar,+913001234567,WAITING
+PT085,Usha Rani,44,Dengue Fever,56,329A,Dr.S.Johnson,+912991234567,WAITING
+PT086,Venkatesh Rao,77,Dementia,82,ICU-19,Dr.A.Patel,+912881234567,CRITICAL
+PT087,Wahida Begum,36,Migraine,33,134C,Dr.R.Kumar,+912771234567,READY
+PT088,Xena Sharma,63,Kidney Stones,67,330B,Dr.S.Johnson,+912661234567,WAITING
+PT089,Yogesh Kumar,48,Asthma,51,232C,Dr.A.Patel,+912551234567,WAITING
+PT090,Zarina Begum,71,Arthritis,69,415A,Dr.R.Kumar,+912441234567,WAITING
+PT091,Abhishek Jain,30,Fracture,24,135A,Dr.S.Johnson,+912331234567,READY
+PT092,Bharathi Devi,65,Breast Cancer,81,ICU-20,Dr.A.Patel,+912221234567,CRITICAL
+PT093,Chetan Sharma,43,Typhoid,41,136B,Dr.R.Kumar,+912111234567,READY
+PT094,Devika Nair,57,Liver Disease,74,331C,Dr.S.Johnson,+912001234567,WAITING
+PT095,Eswar Prasad,74,Coronary Artery Disease,86,ICU-21,Dr.A.Patel,+911991234567,CRITICAL
+PT096,Geeta Kumari,40,Appendicitis,36,137A,Dr.R.Kumar,+911881234567,READY
+PT097,Harendra Singh,68,Hypertension,76,416B,Dr.S.Johnson,+911771234567,WAITING
+PT098,Indumathi Rao,53,Osteoporosis,59,233A,Dr.A.Patel,+911661234567,WAITING
+PT099,Jeevan Kumar,35,Malaria,37,138C,Dr.R.Kumar,+911551234567,READY
+PT100,Kamakshi Devi,79,Stroke,91,ICU-22,Dr.S.Johnson,+911441234567,CRITICAL
+PT101,Lakshmanan Raj,46,Diabetes,53,234B,Dr.A.Patel,+911331234567,WAITING
+PT102,Meenakshi Rao,62,COPD,70,332A,Dr.R.Kumar,+911221234567,WAITING
+PT103,Nirmal Kumar,38,Dengue Fever,43,139B,Dr.S.Johnson,+911111234567,READY
+PT104,Oviya Sharma,55,Kidney Failure,83,ICU-23,Dr.A.Patel,+911001234567,CRITICAL
+PT105,Prabhakar Rao,72,Cardiac Failure,89,ICU-24,Dr.R.Kumar,+910991234567,CRITICAL
+PT106,Rajeswari Devi,49,Thyroid Disorder,46,140A,Dr.S.Johnson,+910881234567,READY
+PT107,Selvam Raja,66,Liver Disease,73,333C,Dr.A.Patel,+910771234567,WAITING
+PT108,Thilaga Devi,41,Arthritis,40,235C,Dr.R.Kumar,+910661234567,READY
+PT109,Udayakumar,77,Dementia,85,ICU-25,Dr.S.Johnson,+910551234567,CRITICAL
+PT110,Vijayalakshmi,54,Migraine,50,234A,Dr.A.Patel,+910441234567,WAITING
+PT111,Waseem Ahmed,33,Fracture,26,141B,Dr.R.Kumar,+910331234567,READY
+PT112,Yadagiri Rao,70,Hypertension,78,417A,Dr.S.Johnson,+910221234567,WAITING
+PT113,Zeba Khan,45,Asthma,48,236B,Dr.A.Patel,+910111234567,WAITING
+PT114,Amrutha Varshini,28,Appendicitis,30,142C,Dr.R.Kumar,+919991111111,READY
+PT115,Basavaraj Singh,75,Cardiac Arrest,92,ICU-26,Dr.S.Johnson,+919881111111,CRITICAL
+PT116,Chandra Sekhar,59,Kidney Stones,62,334A,Dr.A.Patel,+919771111111,WAITING
+PT117,Dharani Priya,37,Typhoid,35,143A,Dr.R.Kumar,+919661111111,READY
+PT118,Elango Murugan,83,Liver Cirrhosis,88,ICU-27,Dr.S.Johnson,+919551111111,CRITICAL
+PT119,Gayathri Devi,50,Breast Cancer,76,418B,Dr.A.Patel,+919441111111,WAITING
+PT120,Hari Shankar,64,Coronary Artery Disease,84,ICU-28,Dr.R.Kumar,+919331111111,CRITICAL 

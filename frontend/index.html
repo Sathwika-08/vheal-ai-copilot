@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VHeal AI – Agentic Discharge Copilot</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal: #4CAF9A;
+            --teal-dark: #3a9b87;
+            --teal-light: #e8f5f2;
+            --red: #ef4444;
+            --orange: #f59e0b;
+            --green: #22c55e;
+            --bg: #f0f4f7;
+            --white: #ffffff;
+            --sidebar-w: 230px;
+            --panel-w: 310px;
+            --text: #1a2332;
+            --muted: #6b7a8d;
+            --border: #e2e8f0;
+            --shadow: 0 2px 12px rgba(0,0,0,0.07);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app {
+            display: grid;
+            grid-template-columns: var(--sidebar-w) 1fr var(--panel-w);
+            height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            background: var(--white);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 16px;
+        }
+
+        .sidebar-logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--teal);
+            letter-spacing: -0.5px;
+            margin-bottom: 16px;
+            padding: 0 8px;
+        }
+
+        .init-btn {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--teal);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 28px;
+            transition: background 0.2s;
+        }
+
+        .init-btn:hover { background: var(--teal-dark); }
+
+        .menu-title {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--muted);
+            padding: 0 8px;
+            margin-bottom: 6px;
+        }
+
+        .sidebar-nav { list-style: none; margin-bottom: auto; }
+
+        .sidebar-nav li {
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.15s;
+            margin-bottom: 2px;
+        }
+
+        .sidebar-nav li:hover { background: var(--teal-light); color: var(--teal-dark); }
+        .sidebar-nav li.active { background: var(--teal-light); color: var(--teal-dark); font-weight: 600; }
+
+        .health-badge {
+            margin-top: 24px;
+            padding: 12px;
+            background: var(--teal-light);
+            border-radius: 8px;
+        }
+
+        .health-badge p { color: var(--muted); margin-bottom: 3px; font-size: 11px; }
+        .health-badge span { color: var(--teal-dark); font-weight: 700; font-size: 13px; }
+
+        /* ── MAIN ── */
+        .main {
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .page { display: none; }
+        .page.active { display: flex; flex-direction: column; gap: 20px; }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF9A 0%, #6ecfba 60%, #8fddd0 100%);
+            color: white;
+            padding: 22px 26px;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(76,175,154,0.3);
+        }
+
+        .header h1 { font-size: 22px; font-weight: 700; }
+        .header p { font-size: 13px; opacity: 0.88; margin-top: 4px; }
+
+        /* ── STATS ── */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card p { font-size: 11px; color: var(--muted); font-weight: 500; margin-bottom: 6px; }
+        .stat-card h2 { font-size: 26px; font-weight: 700; }
+        .stat-card.urgent { border-left: 4px solid var(--orange); }
+        .stat-card.urgent h2 { color: var(--orange); }
+
+        .section-title { font-size: 15px; font-weight: 700; color: var(--text); }
+
+        /* ── PATIENT CARDS ── */
+        .patients {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .patient-card {
+            background: var(--white);
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .patient-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+        .patient-card.high { border-left: 5px solid var(--red); }
+        .patient-card.medium { border-left: 5px solid var(--orange); }
+        .patient-card.low { border-left: 5px solid var(--green); }
+
+        .patient-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .patient-card p { font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            margin: 6px 0;
+        }
+
+        .badge-high { background: #fef2f2; color: var(--red); }
+        .badge-medium { background: #fffbeb; color: var(--orange); }
+        .badge-low { background: #f0fdf4; color: var(--green); }
+
+        .details-btn {
+            margin-top: 10px;
+            padding: 8px;
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .details-btn:hover { background: var(--teal-light); color: var(--teal-dark); }
+
+        /* ── RIGHT PANEL ── */
+        .right-panel {
+            background: var(--white);
+            border-left: 1px solid var(--border);
+            padding: 24px 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 700;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        .check-true { color: var(--green); }
+        .check-false { color: #cbd5e1; }
+        .panel-empty { color: var(--muted); font-size: 13px; text-align: center; padding: 40px 0; }
+
+        /* ── SUMMARY PAGE ── */
+        .summary-form {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            display: block;
+            margin-bottom: 6px;
+            margin-top: 14px;
+        }
+
+        .form-select, .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .generate-btn {
+            margin-top: 16px;
+            padding: 12px 20px;
+            background: var(--teal);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .generate-btn:hover { background: var(--teal-dark); }
+
+        .summary-output {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            display: none;
+        }
+
+        .summary-output.show { display: block; }
+
+        /* ── STAFF PAGE ── */
+        .staff-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+        }
+
+        .staff-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .staff-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin: 0 auto 10px;
+        }
+
+        .staff-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+        .staff-card p { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .dot-active { background: var(--green); }
+        .dot-busy { background: var(--orange); }
+        .dot-offline { background: #cbd5e1; }
+        .staff-status { font-size: 11px; font-weight: 600; }
+
+        .task-list {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        .task-item:last-child { border-bottom: none; }
+
+        .task-tag {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        .tag-urgent { background: #fef2f2; color: var(--red); }
+        .tag-pending { background: #fffbeb; color: var(--orange); }
+        .tag-done { background: #f0fdf4; color: var(--green); }
+
+        /* ── NOTIFICATIONS PAGE ── */
+        .notif-log {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .notif-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .notif-item:last-child { border-bottom: none; }
+
+        .notif-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .icon-sms { background: #eff6ff; }
+        .icon-wa { background: #f0fdf4; }
+        .icon-alert { background: #fef2f2; }
+
+        .notif-body h4 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+        .notif-body p { font-size: 11px; color: var(--muted); }
+        .notif-time { font-size: 10px; color: var(--muted); margin-left: auto; white-space: nowrap; }
+
+        .send-notif-btn {
+            padding: 10px 18px;
+            background: var(--teal);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .send-notif-btn:hover { background: var(--teal-dark); }
+
+        /* ── ANALYTICS PAGE ── */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .analytics-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .a-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .a-value { font-size: 28px; font-weight: 700; margin: 6px 0 2px; }
+        .a-sub { font-size: 11px; color: var(--green); font-weight: 600; }
+
+        .bar-chart-wrap {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .bar-chart-wrap h4 { font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+
+        .bar-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 12px;
+        }
+
+        .bar-label { width: 90px; color: var(--muted); font-weight: 500; }
+        .bar-track { flex: 1; height: 10px; background: var(--bg); border-radius: 10px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 10px; }
+        .bar-val { width: 36px; text-align: right; font-weight: 700; }
+
+        .pie-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        .pie-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .pie-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+
+        .donut-wrap { position: relative; width: 100px; height: 100px; margin: 0 auto 12px; }
+        .donut-wrap svg { transform: rotate(-90deg); }
+        .donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+        .donut-center span { font-size: 18px; font-weight: 700; display: block; }
+        .donut-center small { font-size: 9px; color: var(--muted); }
+
+        .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+        .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
+        .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            bottom: 24px; right: 24px;
+            background: var(--text);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s;
+            z-index: 999;
+        }
+
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        /* ── ERROR BOX ── */
+        .error-box {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 20px;
+            color: #dc2626;
+            font-size: 13px;
+            grid-column: 1/-1;
+        }
+
+        .error-box code {
+            background: #1a2332;
+            color: #4CAF9A;
+            padding: 10px 14px;
+            border-radius: 8px;
+            display: block;
+            margin-top: 8px;
+            font-size: 12px;
+            font-family: 'DM Mono', monospace;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    </style>
+</head>
+<body>
+<div class="app">
+
+    <!-- ── SIDEBAR ── -->
+    <div class="sidebar">
+        <div class="sidebar-logo">VHeal AI</div>
+        <button class="init-btn" onclick="initAgents()">⚡ Initialize AI Agents</button>
+
+        <p class="menu-title">Agent Services</p>
+        <ul class="sidebar-nav">
+            <li class="active" onclick="navigate('dashboard', this)">🏥 Dashboard Overview</li>
+            <li onclick="navigate('summary', this)">📄 Generate Summary</li>
+            <li onclick="navigate('staff', this)">👥 Staff Coordination</li>
+            <li onclick="navigate('notifications', this)">🔔 Patient Notifications</li>
+            <li onclick="navigate('analytics', this)">📊 Analytics</li>
+        </ul>
+
+        <div class="health-badge">
+            <p>System Health</p>
+            <span>✅ 100% Operational</span>
+        </div>
+    </div>
+
+    <!-- ── MAIN CONTENT ── -->
+    <div class="main">
+
+        <!-- ══ PAGE: DASHBOARD ══ -->
+        <div class="page active" id="page-dashboard">
+            <div class="header">
+                <h1>Agentic Discharge Copilot</h1>
+                <p>Real-time coordination for rapid bed turnover & patient safety.</p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <p>Total Patients in CSV</p>
+                    <h2 id="total-patients">—</h2>
+                </div>
+                <div class="stat-card urgent">
+                    <p>Urgent Discharges (HIGH)</p>
+                    <h2 id="urgent">—</h2>
+                </div>
+                <div class="stat-card">
+                    <p>Ready for Discharge</p>
+                    <h2 id="total">—</h2>
+                </div>
+                <div class="stat-card">
+                    <p>Active Coordination Agents</p>
+                    <h2 id="active-agents">4</h2>
+                </div>
+            </div>
+
+            <p class="section-title">Patient Discharge Status</p>
+            <div id="patients" class="patients">
+                <p style="color:#aaa; font-size:13px; padding:20px">⏳ Loading patients from CSV...</p>
+            </div>
+        </div>
+
+        <!-- ══ PAGE: GENERATE SUMMARY ══ -->
+        <div class="page" id="page-summary">
+            <div class="header">
+                <h1>📄 Generate Discharge Summary</h1>
+                <p>AI-generated discharge reports — auto-populated from your CSV.</p>
+            </div>
+
+            <div class="summary-form">
+                <label class="form-label">Select Patient (loaded from CSV)</label>
+                <select class="form-select" id="summary-patient">
+                    <option value="">⏳ Loading patients from CSV...</option>
+                </select>
+
+                <label class="form-label">Summary Type</label>
+                <select class="form-select" id="summary-type">
+                    <option value="full">Full Discharge Report</option>
+                    <option value="patient">Patient-Friendly Version</option>
+                    <option value="doctor">Doctor Handover Notes</option>
+                </select>
+
+                <label class="form-label">Additional Notes (optional)</label>
+                <input class="form-input" id="summary-notes"
+                    placeholder="e.g. Patient requested follow-up in 2 weeks..." />
+
+                <button class="generate-btn" onclick="generateSummary()">
+                    ⚡ Generate AI Summary
+                </button>
+            </div>
+
+            <div class="summary-output" id="summary-output"></div>
+        </div>
+
+        <!-- ══ PAGE: STAFF COORDINATION ══ -->
+        <div class="page" id="page-staff">
+            <div class="header">
+                <h1>👥 Staff Coordination</h1>
+                <p>Live status of all hospital staff involved in discharge.</p>
+            </div>
+
+            <p class="section-title">Staff Status</p>
+            <div class="staff-grid">
+                <div class="staff-card">
+                    <div class="staff-avatar" style="background:#eff6ff">👨‍⚕️</div>
+                    <h4>Dr. S. Johnson</h4><p>Attending Physician</p>
+                    <div><span class="status-dot dot-active"></span>
+                    <span class="staff-status" style="color:var(--green)">Active</span></div>
+                </div>
+                <div class="staff-card">
+                    <div class="staff-avatar" style="background:#f0fdf4">👩‍⚕️</div>
+                    <h4>Dr. A. Patel</h4><p>Attending Physician</p>
+                    <div><span class="status-dot dot-active"></span>
+                    <span class="staff-status" style="color:var(--green)">Active</span></div>
+                </div>
+                <div class="staff-card">
+                    <div class="staff-avatar" style="background:#fef2f2">👨‍⚕️</div>
+                    <h4>Dr. R. Kumar</h4><p>Attending Physician</p>
+                    <div><span class="status-dot dot-busy"></span>
+                    <span class="staff-status" style="color:var(--orange)">In Surgery</span></div>
+                </div>
+                <div class="staff-card">
+                    <div class="staff-avatar" style="background:#faf5ff">🧑‍⚕️</div>
+                    <h4>Nurse Priya R.</h4><p>Ward Nurse – 302A</p>
+                    <div><span class="status-dot dot-active"></span>
+                    <span class="staff-status" style="color:var(--green)">Active</span></div>
+                </div>
+                <div class="staff-card">
+                    <div class="staff-avatar" style="background:#fffbeb">💊</div>
+                    <h4>Pharmacist Ravi</h4><p>Pharmacy Dept</p>
+                    <div><span class="status-dot dot-busy"></span>
+                    <span class="staff-status" style="color:var(--orange)">Busy</span></div>
+                </div>
+                <div class="staff-card">
+                    <div class="staff-avatar" style="background:#f0fdf4">🚑</div>
+                    <h4>Transport – Unit 3</h4><p>Patient Transport</p>
+                    <div><span class="status-dot dot-active"></span>
+                    <span class="staff-status" style="color:var(--green)">Available</span></div>
+                </div>
+                <div class="staff-card">
+                    <div class="staff-avatar" style="background:#eff6ff">💰</div>
+                    <h4>Billing – Dept B</h4><p>Finance & Insurance</p>
+                    <div><span class="status-dot dot-offline"></span>
+                    <span class="staff-status" style="color:#94a3b8">Offline</span></div>
+                </div>
+                <div class="staff-card">
+                    <div class="staff-avatar" style="background:#fef2f2">🧪</div>
+                    <h4>Lab Tech Sonia</h4><p>Pathology Lab</p>
+                    <div><span class="status-dot dot-active"></span>
+                    <span class="staff-status" style="color:var(--green)">Active</span></div>
+                </div>
+            </div>
+
+            <p class="section-title" style="margin-top:4px">Pending Coordination Tasks</p>
+            <div class="task-list" id="staff-tasks">
+                <p style="color:#aaa; font-size:13px; padding:10px">⏳ Loading tasks from CSV...</p>
+            </div>
+        </div>
+
+        <!-- ══ PAGE: NOTIFICATIONS ══ -->
+        <div class="page" id="page-notifications">
+            <div class="header">
+                <h1>🔔 Patient Notifications</h1>
+                <p>WhatsApp & SMS alerts — auto-generated from your CSV data.</p>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <p class="section-title">Notification Log</p>
+                <button class="send-notif-btn" onclick="sendAllNotifs()">📤 Send All Pending</button>
+            </div>
+
+            <div class="notif-log" id="notif-log">
+                <p style="color:#aaa; font-size:13px; padding:10px">⏳ Loading notifications from CSV...</p>
+            </div>
+        </div>
+
+        <!-- ══ PAGE: ANALYTICS ══ -->
+        <div class="page" id="page-analytics">
+            <div class="header">
+                <h1>📊 Analytics</h1>
+                <p>AI-powered discharge performance metrics — live from CSV.</p>
+            </div>
+
+            <div class="analytics-grid" id="analytics-cards">
+                <div class="analytics-card">
+                    <div class="a-label">Total Patients</div>
+                    <div class="a-value" id="a-total">—</div>
+                    <div class="a-sub">From patients.csv</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="a-label">Ready for Discharge</div>
+                    <div class="a-value" id="a-ready">—</div>
+                    <div class="a-sub" id="a-ready-pct">Calculating...</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="a-label">High Priority</div>
+                    <div class="a-value" style="color:var(--red)" id="a-high">—</div>
+                    <div class="a-sub" style="color:var(--orange)">Needs urgent attention</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="a-label">Medium Priority</div>
+                    <div class="a-value" style="color:var(--orange)" id="a-medium">—</div>
+                    <div class="a-sub">Monitoring required</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="a-label">Low Priority</div>
+                    <div class="a-value" style="color:var(--green)" id="a-low">—</div>
+                    <div class="a-sub">Stable patients</div>
+                </div>
+                <div class="analytics-card">
+                    <div class="a-label">AI Agent Accuracy</div>
+                    <div class="a-value" style="color:var(--teal)">98%</div>
+                    <div class="a-sub">ML model confidence</div>
+                </div>
+            </div>
+
+            <!-- Dynamic Bar Chart -->
+            <div class="bar-chart-wrap">
+                <h4>Priority Breakdown (from CSV)</h4>
+                <div id="analytics-bars">
+                    <p style="color:#aaa; font-size:13px">⏳ Loading chart data...</p>
+                </div>
+            </div>
+
+            <!-- Dynamic Donut Charts -->
+            <div class="pie-row">
+                <div class="pie-card">
+                    <h4>Discharge Readiness</h4>
+                    <div class="donut-wrap">
+                        <svg viewBox="0 0 100 100" width="100" height="100" id="donut-ready-svg">
+                            <circle cx="50" cy="50" r="38" fill="none" stroke="#f5f7f9" stroke-width="14"/>
+                            <circle id="donut-ready-fill" cx="50" cy="50" r="38" fill="none"
+                                stroke="var(--teal)" stroke-width="14"
+                                stroke-dasharray="0 238" stroke-dashoffset="0"/>
+                        </svg>
+                        <div class="donut-center">
+                            <span id="donut-ready-pct">—</span>
+                            <small>ready</small>
+                        </div>
+                    </div>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:var(--teal)"></div>
+                            <span id="legend-ready">Ready</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:#e2e8f0"></div>
+                            <span id="legend-not-ready">Not Ready</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pie-card">
+                    <h4>Priority Distribution</h4>
+                    <div class="donut-wrap">
+                        <svg viewBox="0 0 100 100" width="100" height="100">
+                            <circle cx="50" cy="50" r="38" fill="none" stroke="#f5f7f9" stroke-width="14"/>
+                            <circle id="donut-high" cx="50" cy="50" r="38" fill="none"
+                                stroke="var(--red)" stroke-width="14"
+                                stroke-dasharray="0 238" stroke-dashoffset="0"/>
+                            <circle id="donut-medium" cx="50" cy="50" r="38" fill="none"
+                                stroke="var(--orange)" stroke-width="14"
+                                stroke-dasharray="0 238" stroke-dashoffset="0"/>
+                            <circle id="donut-low-arc" cx="50" cy="50" r="38" fill="none"
+                                stroke="var(--green)" stroke-width="14"
+                                stroke-dasharray="0 238" stroke-dashoffset="0"/>
+                        </svg>
+                        <div class="donut-center">
+                            <span id="donut-total-count">—</span>
+                            <small>patients</small>
+                        </div>
+                    </div>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:var(--red)"></div>
+                            <span id="legend-high">HIGH</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:var(--orange)"></div>
+                            <span id="legend-medium">MED</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot" style="background:var(--green)"></div>
+                            <span id="legend-low">LOW</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ── RIGHT PANEL ── -->
+    <div class="right-panel">
+        <div class="panel-title">🗒 Discharge Checklist</div>
+        <div id="details">
+            <p class="panel-empty">👆 Click a patient card to view their checklist</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+//  VHeal AI — Fully Dynamic Frontend
+//  Everything reads from backend/patients.csv
+// ══════════════════════════════════════════
+
+const API = "http://127.0.0.1:8000";
+let ALL_PATIENTS = [];
+
+// ── NAVIGATION ──
+function navigate(page, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    document.querySelectorAll('.sidebar-nav li').forEach(li => li.classList.remove('active'));
+    el.classList.add('active');
+    if (page === 'dashboard') loadPatients();
+}
+
+// ── TOAST ──
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── INIT AGENTS ──
+function initAgents() {
+    showToast('⚡ AI Agents initialized! Reading latest CSV...');
+    loadPatients();
+}
+
+// ══════════════════════════════════════════
+//  CORE: LOAD ALL PATIENTS FROM CSV VIA API
+// ══════════════════════════════════════════
+async function loadPatients() {
+    document.getElementById('patients').innerHTML =
+        `<p style="color:#aaa;font-size:13px;padding:20px">⏳ Reading patients.csv...</p>`;
+
+    try {
+        const res = await fetch(`${API}/patients`);
+        if (!res.ok) throw new Error("API error");
+
+        ALL_PATIENTS = await res.json();
+
+        renderPatients(ALL_PATIENTS);
+        updateStats(ALL_PATIENTS);
+        updateSummaryDropdown(ALL_PATIENTS);
+        updateNotificationLog(ALL_PATIENTS);
+        updateStaffTasks(ALL_PATIENTS);
+        updateAnalytics(ALL_PATIENTS);
+
+        showToast(`✅ Loaded ${ALL_PATIENTS.length} patients from CSV`);
+
+    } catch (e) {
+        document.getElementById('patients').innerHTML = `
+            <div class="error-box">
+                <strong>⚠️ Backend not running!</strong><br><br>
+                Run this in your VS Code terminal:<br>
+                <code>python -m uvicorn backend.main:app --reload</code>
+            </div>`;
+        document.getElementById('total-patients').innerText = '—';
+        document.getElementById('urgent').innerText = '—';
+        document.getElementById('total').innerText = '—';
+    }
+}
+
+// ── RENDER PATIENT CARDS ──
+function renderPatients(patients) {
+    if (!patients.length) {
+        document.getElementById('patients').innerHTML =
+            `<p style="color:#aaa;font-size:13px;padding:20px">No patients in CSV.</p>`;
+        return;
+    }
+
+    document.getElementById('patients').innerHTML = patients.map(p => {
+        const pri = (p.priority || 'LOW').toUpperCase();
+        return `
+        <div class="patient-card ${pri.toLowerCase()}"
+             onclick='showDetails(${JSON.stringify(p)})'>
+            <h3>${p.name}</h3>
+            <p>ID: ${p.patient_id}</p>
+            <p>Room: ${p.room}</p>
+            <p>Diagnosis: ${p.diagnosis}</p>
+            <span class="priority-badge badge-${pri.toLowerCase()}">${pri}</span>
+            <p style="margin-top:4px">Tasks: ${p.tasks_completed}</p>
+            <button class="details-btn"
+                onclick='event.stopPropagation();showDetails(${JSON.stringify(p)})'>
+                Details
+            </button>
+        </div>`;
+    }).join('');
+}
+
+// ── UPDATE STATS ──
+function updateStats(patients) {
+    document.getElementById('total-patients').innerText = patients.length;
+    document.getElementById('urgent').innerText =
+        patients.filter(p => p.priority === 'HIGH').length;
+    document.getElementById('total').innerText =
+        patients.filter(p => p.ready_for_discharge).length;
+}
+
+// ── UPDATE SUMMARY DROPDOWN (dynamic from CSV) ──
+function updateSummaryDropdown(patients) {
+    const select = document.getElementById('summary-patient');
+    select.innerHTML = '<option value="">— Select Patient —</option>';
+    patients.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.patient_id;
+        opt.textContent = `${p.patient_id} – ${p.name} (${p.priority})`;
+        opt.setAttribute('data-patient', JSON.stringify(p));
+        select.appendChild(opt);
+    });
+}
+
+// ── UPDATE NOTIFICATION LOG (dynamic from CSV) ──
+function updateNotificationLog(patients) {
+    const log = document.getElementById('notif-log');
+    const now = new Date();
+    let html = '';
+
+    patients.forEach((p, i) => {
+        const t = new Date(now.getTime() - i * 7 * 60000);
+        const ts = t.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+
+        if (p.ready_for_discharge) {
+            html += `
+            <div class="notif-item">
+                <div class="notif-icon icon-wa">💬</div>
+                <div class="notif-body">
+                    <h4>WhatsApp – ${p.name} (${p.patient_id})</h4>
+                    <p>Ready for discharge. Doctor: ${p.doctor} · Room: ${p.room}</p>
+                </div>
+                <span class="notif-time">${ts}</span>
+            </div>
+            <div class="notif-item">
+                <div class="notif-icon icon-sms">📱</div>
+                <div class="notif-body">
+                    <h4>SMS – ${p.name} (${p.patient_id})</h4>
+                    <p>Hello ${p.name}, you are ready for discharge. Room: ${p.room} – VHeal AI</p>
+                </div>
+                <span class="notif-time">${ts}</span>
+            </div>`;
+        } else if (p.priority === 'HIGH') {
+            html += `
+            <div class="notif-item">
+                <div class="notif-icon icon-alert">⚠️</div>
+                <div class="notif-body">
+                    <h4>Alert – ${p.name} (${p.patient_id})</h4>
+                    <p>HIGH priority. Discharge tasks incomplete. Room: ${p.room}</p>
+                </div>
+                <span class="notif-time">${ts}</span>
+            </div>`;
+        } else {
+            html += `
+            <div class="notif-item">
+                <div class="notif-icon icon-sms">📱</div>
+                <div class="notif-body">
+                    <h4>Status Update – ${p.name} (${p.patient_id})</h4>
+                    <p>${p.notification} · Doctor: ${p.doctor}</p>
+                </div>
+                <span class="notif-time">${ts}</span>
+            </div>`;
+        }
+    });
+
+    log.innerHTML = html || `<p style="color:#aaa;text-align:center;padding:20px;font-size:13px">No notifications.</p>`;
+}
+
+// ── UPDATE STAFF TASKS (dynamic from CSV) ──
+function updateStaffTasks(patients) {
+    const el = document.getElementById('staff-tasks');
+    const icons = { vitals_check: '🩺', medication_review: '💊', billing: '💰', transport: '🚑' };
+    const labels = { vitals_check: 'Vitals check', medication_review: 'Medication pack', billing: 'Billing clearance', transport: 'Transport arranged' };
+    const staff = { vitals_check: 'Nurse Priya R.', medication_review: 'Pharmacist Ravi', billing: 'Billing Dept B', transport: 'Transport Unit 3' };
+
+    let html = '';
+
+    patients.forEach(p => {
+        Object.keys(p.checklist).forEach(key => {
+            const done = p.checklist[key];
+            const isUrgent = !done && p.priority === 'HIGH';
+            html += `
+            <div class="task-item">
+                <span>${icons[key]}</span>
+                <div>
+                    <strong>${p.name} (${p.patient_id})</strong> – ${labels[key]}
+                    <div style="font-size:11px;color:var(--muted)">Assigned to: ${staff[key]}</div>
+                </div>
+                <span class="task-tag ${done ? 'tag-done' : isUrgent ? 'tag-urgent' : 'tag-pending'}">
+                    ${done ? 'DONE' : isUrgent ? 'URGENT' : 'PENDING'}
+                </span>
+            </div>`;
+        });
+    });
+
+    el.innerHTML = html || `<p style="color:#aaa;font-size:13px;padding:10px">No tasks found.</p>`;
+}
+
+// ── UPDATE ANALYTICS (dynamic from CSV) ──
+function updateAnalytics(patients) {
+    const total = patients.length;
+    const ready = patients.filter(p => p.ready_for_discharge).length;
+    const high = patients.filter(p => p.priority === 'HIGH').length;
+    const medium = patients.filter(p => p.priority === 'MEDIUM').length;
+    const low = patients.filter(p => p.priority === 'LOW').length;
+    const readyPct = total ? Math.round((ready / total) * 100) : 0;
+
+    // Stat cards
+    document.getElementById('a-total').innerText = total;
+    document.getElementById('a-ready').innerText = ready;
+    document.getElementById('a-ready-pct').innerText = `↑ ${readyPct}% discharge rate`;
+    document.getElementById('a-high').innerText = high;
+    document.getElementById('a-medium').innerText = medium;
+    document.getElementById('a-low').innerText = low;
+
+    // Bar chart
+    const maxVal = Math.max(high, medium, low, 1);
+    document.getElementById('analytics-bars').innerHTML = `
+        <div class="bar-row">
+            <span class="bar-label">HIGH</span>
+            <div class="bar-track">
+                <div class="bar-fill" style="width:${(high/maxVal)*100}%;background:var(--red)"></div>
+            </div>
+            <span class="bar-val">${high}</span>
+        </div>
+        <div class="bar-row">
+            <span class="bar-label">MEDIUM</span>
+            <div class="bar-track">
+                <div class="bar-fill" style="width:${(medium/maxVal)*100}%;background:var(--orange)"></div>
+            </div>
+            <span class="bar-val">${medium}</span>
+        </div>
+        <div class="bar-row">
+            <span class="bar-label">LOW</span>
+            <div class="bar-track">
+                <div class="bar-fill" style="width:${(low/maxVal)*100}%;background:var(--green)"></div>
+            </div>
+            <span class="bar-val">${low}</span>
+        </div>
+        <div class="bar-row">
+            <span class="bar-label">Ready</span>
+            <div class="bar-track">
+                <div class="bar-fill" style="width:${readyPct}%;background:var(--teal)"></div>
+            </div>
+            <span class="bar-val">${ready}</span>
+        </div>`;
+
+    // Donut: Readiness
+    const circ = 238;
+    const readyArc = total ? (ready / total) * circ : 0;
+    document.getElementById('donut-ready-fill').setAttribute('stroke-dasharray', `${readyArc} ${circ}`);
+    document.getElementById('donut-ready-pct').innerText = readyPct + '%';
+    document.getElementById('legend-ready').innerText = `Ready (${ready})`;
+    document.getElementById('legend-not-ready').innerText = `Not Ready (${total - ready})`;
+
+    // Donut: Priority
+    const highArc = total ? (high / total) * circ : 0;
+    const medArc = total ? (medium / total) * circ : 0;
+    const lowArc = total ? (low / total) * circ : 0;
+
+    document.getElementById('donut-high').setAttribute('stroke-dasharray', `${highArc} ${circ}`);
+    document.getElementById('donut-high').setAttribute('stroke-dashoffset', '0');
+
+    document.getElementById('donut-medium').setAttribute('stroke-dasharray', `${medArc} ${circ}`);
+    document.getElementById('donut-medium').setAttribute('stroke-dashoffset', `${-highArc}`);
+
+    document.getElementById('donut-low-arc').setAttribute('stroke-dasharray', `${lowArc} ${circ}`);
+    document.getElementById('donut-low-arc').setAttribute('stroke-dashoffset', `${-(highArc + medArc)}`);
+
+    document.getElementById('donut-total-count').innerText = total;
+    document.getElementById('legend-high').innerText = `HIGH (${high})`;
+    document.getElementById('legend-medium').innerText = `MED (${medium})`;
+    document.getElementById('legend-low').innerText = `LOW (${low})`;
+}
+
+// ── SHOW CHECKLIST ──
+function showDetails(p) {
+    const checks = [
+        { label: 'Vitals', val: p.checklist.vitals_check },
+        { label: 'Medication', val: p.checklist.medication_review },
+        { label: 'Billing', val: p.checklist.billing },
+        { label: 'Transport', val: p.checklist.transport }
+    ];
+
+    document.getElementById('details').innerHTML = `
+        <div style="margin-bottom:12px">
+            <p style="font-size:14px;font-weight:700;margin-bottom:4px">${p.name}</p>
+            <p style="font-size:11px;color:var(--muted)">ID: ${p.patient_id}</p>
+            <p style="font-size:11px;color:var(--muted)">Doctor: ${p.doctor}</p>
+            <p style="font-size:11px;color:var(--muted)">Room: ${p.room}</p>
+            <p style="font-size:11px;color:var(--muted)">Diagnosis: ${p.diagnosis}</p>
+            <p style="font-size:11px;color:var(--muted)">Age: ${p.age} · Severity: ${p.severity}</p>
+        </div>
+        <div style="padding:10px;background:var(--teal-light);border-radius:8px;
+                    font-size:12px;font-weight:600;color:var(--teal-dark);margin-bottom:12px">
+            ${p.ready_for_discharge ? '✅ Ready for Discharge' : '⏳ Not Yet Ready'}
+        </div>
+        ${checks.map(c => `
+            <div class="checklist-item">
+                <span class="${c.val ? 'check-true' : 'check-false'}" style="font-size:16px">
+                    ${c.val ? '✅' : '⬜'}
+                </span>
+                <span>${c.label}: <strong>${c.val}</strong></span>
+            </div>`).join('')}
+        <div style="margin-top:12px;padding:10px;background:var(--bg);
+                    border-radius:8px;font-size:11px;color:var(--muted)">
+            📢 ${p.notification}
+        </div>`;
+}
+
+// ── GENERATE SUMMARY ──
+function generateSummary() {
+    const select = document.getElementById('summary-patient');
+    const opt = select.options[select.selectedIndex];
+    const type = document.getElementById('summary-type').value;
+    const notes = document.getElementById('summary-notes').value;
+    const el = document.getElementById('summary-output');
+
+    if (!select.value) { showToast('⚠️ Please select a patient first.'); return; }
+
+    const p = JSON.parse(opt.getAttribute('data-patient'));
+    const date = new Date().toLocaleDateString('en-IN',
+        { day: '2-digit', month: 'long', year: 'numeric' });
+
+    let text = '';
+
+    if (type === 'full') {
+        text =
+`═══════════════════════════════════════════
+  VHeal AI – DISCHARGE SUMMARY REPORT
+═══════════════════════════════════════════
+Date          : ${date}
+Patient ID    : ${p.patient_id}
+Patient Name  : ${p.name}
+Age           : ${p.age} years
+Room          : ${p.room}
+Diagnosis     : ${p.diagnosis}
+Severity      : ${p.severity}
+Priority      : ${p.priority}
+Physician     : ${p.doctor}
+Phone         : ${p.phone}
+
+CHECKLIST STATUS:
+─────────────────
+${p.checklist.vitals_check       ? '✅' : '❌'} Vitals Check
+${p.checklist.medication_review  ? '✅' : '❌'} Medication Review
+${p.checklist.billing            ? '✅' : '❌'} Billing Clearance
+${p.checklist.transport          ? '✅' : '❌'} Transport Arranged
+
+DISCHARGE STATUS : ${p.ready_for_discharge ? '✅ READY' : '⏳ NOT YET READY'}
+TASKS COMPLETED  : ${p.tasks_completed}
+
+DISCHARGE INSTRUCTIONS:
+───────────────────────
+- Take all prescribed medications as directed.
+- Follow up with ${p.doctor} within 7 days.
+- Seek emergency care if symptoms worsen.
+${notes ? '\nNOTES:\n───────\n' + notes : ''}
+Generated by VHeal AI Agentic Copilot
+═══════════════════════════════════════════`;
+
+    } else if (type === 'patient') {
+        text =
+`Dear ${p.name},
+
+You are being discharged today from Room ${p.room}.
+
+Your doctor ${p.doctor} has reviewed your condition
+and confirmed you are ready to go home.
+
+📋 What to do at home:
+- Take all medications as prescribed
+- Rest and avoid strenuous activity
+- Schedule a follow-up visit within 7 days
+- Call us immediately if anything feels wrong
+${notes ? '\n📝 Special Note: ' + notes + '\n' : ''}
+We wish you a speedy recovery! 💚
+— VHeal AI, ${date}`;
+
+    } else {
+        text =
+`HANDOVER NOTE – ${date}
+──────────────────────────────
+Patient  : ${p.name} (${p.patient_id})
+Age      : ${p.age}   Severity: ${p.severity}
+Diagnosis: ${p.diagnosis}
+Room     : ${p.room}   Priority: ${p.priority}
+
+Vitals      : ${p.checklist.vitals_check ? 'Done' : 'Pending'}
+Medication  : ${p.checklist.medication_review ? 'Dispensed' : 'Pending'}
+Billing     : ${p.checklist.billing ? 'Cleared' : 'Pending'}
+Transport   : ${p.checklist.transport ? 'Arranged' : 'Not yet arranged'}
+
+Discharge   : ${p.ready_for_discharge ? 'APPROVED ✅' : 'PENDING ⏳'}
+Tasks       : ${p.tasks_completed}
+${notes ? '\nNotes: ' + notes : ''}
+— Generated by VHeal AI`;
+    }
+
+    el.textContent = text;
+    el.classList.add('show');
+    showToast('✅ Summary generated from live CSV data!');
+}
+
+// ── SEND ALL NOTIFICATIONS ──
+function sendAllNotifs() {
+    const ready = ALL_PATIENTS.filter(p => p.ready_for_discharge).length;
+    showToast(`📤 Notifications sent to ${ready} ready patients!`);
+}
+
+// ── AUTO REFRESH every 30 seconds ──
+setInterval(loadPatients, 30000);
+
+// ── LOAD ON START ──
+loadPatients();
+</script>
+</body>
+</html>
